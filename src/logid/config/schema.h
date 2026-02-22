@@ -39,6 +39,8 @@ namespace logid::actions {
 
     class ToggleSmartShift;
 
+    class ToggleSmartHires;
+
     class AxisGesture;
 
     class IntervalGesture;
@@ -89,6 +91,13 @@ namespace logid::config {
                 signed_group<std::string>("type", "ToggleHiresScroll") {}
     };
 
+    struct ToggleSmartHires : public signed_group<std::string> {
+        typedef actions::ToggleSmartHires action;
+
+        ToggleSmartHires() :
+                signed_group<std::string>("type", "ToggleSmartHires") {}
+    };
+
     struct CycleDPI : public signed_group<std::string> {
         typedef actions::CycleDPI action;
         std::optional<std::list<int>> dpis;
@@ -135,6 +144,7 @@ namespace logid::config {
             KeypressAction,
             ToggleSmartShift,
             ToggleHiresScroll,
+            ToggleSmartHires,
             CycleDPI,
             ChangeDPI,
             ChangeHost,
@@ -232,6 +242,7 @@ namespace logid::config {
             KeypressAction,
             ToggleSmartShift,
             ToggleHiresScroll,
+            ToggleSmartHires,
             CycleDPI,
             ChangeDPI,
             ChangeHost,

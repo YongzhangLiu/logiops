@@ -49,5 +49,4 @@ pactl set-sink-volume @DEFAULT_SINK@ 100%
 
 sudo cp ../logid.cfg /etc/ && sudo systemctl restart logid
 
-make -j$(nproc) && sudo make in
-stall
+make -j$(nproc) && sudo make install

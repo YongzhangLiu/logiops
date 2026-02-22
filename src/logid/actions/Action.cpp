@@ -20,6 +20,7 @@
 #include <actions/KeypressAction.h>
 #include <actions/ToggleSmartShift.h>
 #include <actions/ToggleHiresScroll.h>
+#include <actions/ToggleSmartHires.h>
 #include <actions/GestureAction.h>
 #include <actions/NullAction.h>
 #include <actions/CycleDPI.h>
@@ -72,6 +73,8 @@ namespace logid::actions {
             config = config::ToggleHiresScroll();
         } else if (name == ToggleSmartShift::interface_name) {
             config = config::ToggleSmartShift();
+        } else if (name == ToggleSmartHires::interface_name) {
+            config = config::ToggleSmartHires();
         } else if (name == ChangeProfile::interface_name) {
             config = config::ChangeProfile();
         } else if (name == "Default") {

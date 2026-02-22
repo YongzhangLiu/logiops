@@ -30,6 +30,7 @@ add_executable(logid
         actions/KeypressAction.cpp
         actions/ToggleHiresScroll.cpp
         actions/ToggleSmartShift.cpp
+        actions/ToggleSmartHires.cpp
         actions/CycleDPI.cpp
         actions/ChangeDPI.cpp
         actions/GestureAction.cpp
