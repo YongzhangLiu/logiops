@@ -138,7 +138,7 @@ void AxisGesture::setHiresMultiplier(double multiplier) {
     _hires_multiplier = multiplier;
     if (_input_axis.has_value()) {
         if (InputDevice::getLowResAxis(_input_axis.value()) != -1)
-            _multiplier = _config.axis_multiplier.value_or(1) * multiplier;
+            _multiplier = fabs(_config.axis_multiplier.value_or(1)) * multiplier;
     }
 }
 
