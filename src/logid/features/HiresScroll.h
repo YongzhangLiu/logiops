@@ -40,6 +40,8 @@ namespace logid::features {
 
         void setMode(uint8_t mode);
 
+        void setTargetMode(bool target);
+
     protected:
         explicit HiresScroll(Device* dev);
 

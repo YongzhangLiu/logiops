@@ -128,6 +128,11 @@ void HiresScroll::setMode(uint8_t mode) {
     _hires_scroll->setMode(mode);
 }
 
+void HiresScroll::setTargetMode(bool target) {
+    if (_ipc_interface)
+        _ipc_interface->setTarget(target);
+}
+
 void HiresScroll::_makeGesture(std::shared_ptr<actions::Gesture>& gesture,
                                std::optional<config::Gesture>& config,
                                const std::string& direction) {
