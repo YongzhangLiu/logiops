@@ -128,6 +128,11 @@ void HiresScroll::setMode(uint8_t mode) {
     _hires_scroll->setMode(mode);
 }
 
+void HiresScroll::setHiresMode(bool hires) {
+    if (_ipc_interface)
+        _ipc_interface->setHires(hires);
+}
+
 void HiresScroll::setTargetMode(bool target) {
     if (_ipc_interface)
         _ipc_interface->setTarget(target);

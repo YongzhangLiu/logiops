@@ -39,31 +39,27 @@ If we only toggled SmartShift and the HiRes capability bit on the device without
 *   **In Ratchet Mode:** The wheel generates far fewer physical events than in free-spin mode. Because LogiOps was still intercepting these sparse events (`target: true`) and applying the logic meant for high-density smooth scrolling, the resulting scroll speed onscreen was excruciatingly slow.
 *   **The Fix:** By dynamically setting `setTargetMode(false)` when entering Ratchet mode, LogiOps stops trying to process the sparse events through the axis multiplier, allowing the OS to handle the standard native wheel packets. When returning to Smooth mode, `setTargetMode(true)` reactivates the custom high-res event multipliers.
 
-### The Initial Config Requirement: Why `target: true` MUST be in `logid.cfg`
-A major quirk discovered is that the `target` setting must be set to `true` in the initial `logid.cfg` file, even though our default starting state (Ratchet mode) intends for it to be `false` (which is forced dynamically in code later). 
+### The True Root Cause: State Desynchronization
+Initially, we believed `target: true` had to be explicitly set in the initial `logid.cfg` file because `target: false` somehow prevented the interception framework from being built. 
 
-**The Reason:**
-During LogiOps daemon startup (`HiresScroll::_configure()`), if the config has `target: false`, the daemon optimizes its initialization by **completely skipping** the setup for event diversion hooks and axis gesture parsing. 
-*   If you boot with `target: false`, the interception framework is never built. When our C++ code later tries to execute `_hires_scroll->setTargetMode(true)` at runtime to re-enable smooth scrolling, the hook fails silently because the underlying routing was never configured in memory.
-*   By setting `target: true` in the config file, we force LogiOps to build the interception framework for `REL_WHEEL_HI_RES` and the multipliers at initialization. Our custom C++ action can then safely toggle that interception pipeline on and off at will.
+**This was incorrect.** The actual issue stemmed from how the backend mode was being modified directly. The original implementation called `_hires_scroll->setMode(...)` directly. This successfully updated the mouse's physical state, but LogiOps' internal `HiresScroll::_mask` and `HiresScroll::_mode` variables remained unchanged.
 
-### Alignment with Official Documentation
-The official description for the `target` field states:
-> *This is an optional boolean field that defines whether mousewheel events should send as an HID++ notification or work normally (true for HID++ notification, false for normal usage). This option must be set to true to remap the scroll wheel action.*
+Whenever a subsequent IPC sync occurred (such as `_configure()` being called), LogiOps would read its internal, unmodified state variables and push them back to the device, silently reverting the HiRes bit and breaking the smooth scroll configuration.
 
-This perfectly matches our empirical findings:
-1. **"false for normal usage"**: When we toggle `setTargetMode(false)` in code for Ratchet mode, the mouse sends standard, native wheel events instead of high-density sparse HID++ packets. This is exactly why the scroll speed returned to normal in ratchet mode without doubling the multiplier!
-2. **"must be set to true to remap the scroll wheel action"**: This explains our initialization quirk! Because we wanted to remap the high-resolution scrolling (applying an `axis_multiplier` of `0.8`), the config parser *must* read `target: true` at startup to actually instantiate that remapping sequence. If we initialized it as `false`, LogiOps respected the documentation—it never mapped the scroll wheel actions, which is why toggling it dynamically later failed silently.  
+### The Corrected Implementation
+The codebase now properly uses `setHiresMode(bool)` and `setTargetMode(bool)` exposed by `HiresScroll`. These functions route through the IPC-aligned setters (`IPC::setHires` and `IPC::setTarget`), ensuring the internal state variables remain perfectly synchronized with the device's physical mode.
+
+Because of this fix, the gesture hooks built during `_makeGesture(...)` function correctly, and we can finally boot directly into Ratchet mode with `target: false` as originally intended.
 
 ## 4. Working Configuration Snippet Reference
-For the above C++ custom implementation to function properly, the config MUST look like this:
+For the above C++ custom implementation to function properly, the config should look like this:
 
 ```properties
     hiresscroll:
     {
         hires: false;          // Start in Ratchet mode natively
         invert: false;
-        target: true;          // MUST BE TRUE to build internal hooks, despite starting in Ratchet
+        target: false;         // Start without interception for normal ratchet speeds
         up:
         {
             mode: "Axis";

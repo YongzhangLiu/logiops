@@ -60,9 +60,7 @@ void ToggleSmartHires::press() {
                     self->_smartshift->setStatus(ss_status);
                     
                     // Enable HiRes scroll with target mode
-                    auto mode = self->_hires_scroll->getMode();
-                    mode |= backend::hidpp20::HiresScroll::HiRes;
-                    self->_hires_scroll->setMode(mode);
+                    self->_hires_scroll->setHiresMode(true);
                     self->_hires_scroll->setTargetMode(true);
                 } else {
                     // SmartShift is OFF: turn it ON and turn HiRes OFF
@@ -71,9 +69,7 @@ void ToggleSmartHires::press() {
                     self->_smartshift->setStatus(ss_status);
                     
                     // Disable HiRes scroll and use non-target mode for ratchet
-                    auto mode = self->_hires_scroll->getMode();
-                    mode &= ~backend::hidpp20::HiresScroll::HiRes;
-                    self->_hires_scroll->setMode(mode);
+                    self->_hires_scroll->setHiresMode(false);
                     self->_hires_scroll->setTargetMode(false);
                 }
             }

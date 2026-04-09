@@ -40,6 +40,8 @@ namespace logid::features {
 
         void setMode(uint8_t mode);
 
+        void setHiresMode(bool hires);
+
         void setTargetMode(bool target);
 
     protected:
