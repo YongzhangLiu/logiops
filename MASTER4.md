@@ -44,9 +44,17 @@
 [DEBUG] Thumb wheel resolution: native (20), diverted (120)
 ```
 
-
-pactl set-sink-volume @DEFAULT_SINK@ 100%
-
-sudo cp ../logid.cfg /etc/ && sudo systemctl restart logid
-
-make -j$(nproc) && sudo make install
+## Useful Commands & Configs
+- Rebuild
+    ```bash
+    make -j$(nproc) && sudo make install
+    ```
+- Reconfigure & launch
+    ```bash
+    sudo cp ../logid.cfg /etc/ && sudo systemctl restart logid
+    ```
+- Fine 1% volume resolution trick hyprland
+    ```hypr
+    bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -4%
+    bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +4%
+    ```
