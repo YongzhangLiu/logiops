@@ -1,0 +1,45 @@
+{
+  "nodes": {
+    "ipcgull": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1689184835,
+        "narHash": "sha256-Gq/3eQLnp4cMNvhGfJxwaTLUuzL2RM0nzQGgmRc6+XM=",
+        "owner": "PixlOne",
+        "repo": "ipcgull",
+        "rev": "cd0f9a8cefb5b2545e163fceb249fdbcbaf666aa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "PixlOne",
+        "repo": "ipcgull",
+        "rev": "cd0f9a8cefb5b2545e163fceb249fdbcbaf666aa",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1792773339,
+        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "ipcgull": "ipcgull",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
